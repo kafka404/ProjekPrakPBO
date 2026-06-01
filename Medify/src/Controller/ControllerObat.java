@@ -33,6 +33,7 @@ public class ControllerObat {
     }
     
     // Update Obat
+    // Update Obat
     public void update(String namaObat , int harga , int stok , String jenis){
         ModelObat obat;
         if(jenis.equalsIgnoreCase("Resep")){
@@ -40,7 +41,7 @@ public class ControllerObat {
         }else{
             obat = new ObatBiasa(0 , namaObat , stok , harga);
         }
-        dao.insert(obat);
+        dao.update(obat);
     }
     
     // Hapus Obat
