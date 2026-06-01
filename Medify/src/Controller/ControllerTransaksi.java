@@ -44,7 +44,7 @@ public class ControllerTransaksi {
         int totalBayar = hargaSetelahDiskon * jumlah;
         
         // Kurangi stok
-        controllerObat.kurangiStok(idObat, jumlah);
+        controllerObat.KurangiStok(idObat, jumlah);
         
         // Simpan transaksi ke database
         String query = "INSERT INTO transaksi (nama_customer, nama_obat, jenis_obat, jumlah_beli, harga_satuan, total_bayar) VALUES (?,?,?,?,?,?)";
