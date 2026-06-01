@@ -61,7 +61,7 @@ public class DAOObat implements InterfaceDAO{
             
             if(result.next()){
                 String jenis = result.getString("jenis");
-                if(jenis.equalsIgnoreCase("resep")){
+                if(jenis.equalsIgnoreCase("Resep")){
                     obat = new ObatResep(
                         result.getInt("id_obat"), result.getString("nama_obat"), 
                         result.getInt("stok"), result.getInt("harga"));
@@ -88,7 +88,7 @@ public class DAOObat implements InterfaceDAO{
             while(result.next()){
                 String jenis = result.getString("jenis");
                 ModelObat obat;
-                if(jenis.equalsIgnoreCase("resep")){
+                if(jenis.equalsIgnoreCase("Resep")){
                     obat = new ObatResep(
                         result.getInt("id_obat"), result.getString("nama_obat"), 
                         result.getInt("stok"), result.getInt("harga"));
