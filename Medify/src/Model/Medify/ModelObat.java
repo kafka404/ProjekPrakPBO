@@ -27,8 +27,8 @@ public abstract class ModelObat {
     public abstract double   getDiskon();
     public abstract String getJenis();
     
-    // Method Untuk Harga Obat Setelah Diskon
-    public int getHargaDiskon(){
+     // Method Untuk Harga Obat Setelah Diskon
+    public int getHargaSetelahDiskon(){
         return (int)(getHarga() * (1 - getDiskon()/100));
     }
     
