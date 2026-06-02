@@ -1,9 +1,10 @@
 package Model.Medify;
+
 import Model.Connector;
 import java.sql.*;
 import java.util.*;
 
-public class DAOObat implements InterfaceDAO{
+public class DAOObat implements InterfaceDAO {
     
     @Override
     public void insert(Object object){
@@ -16,8 +17,12 @@ public class DAOObat implements InterfaceDAO{
             statement.setInt(3, obat.getStok());
             statement.setString(4, obat.getJenis());
             statement.executeUpdate();
+            
+            
+            System.out.println("Obat '" + obat.getNamaObat() + "' berhasil ditambahkan!");
+            
         }catch(Exception exception){
-            System.out.println("Gagal Menambahkan Data Obat: " + exception.getMessage());
+            System.out.println("Gagal: " + exception.getMessage());
         }
     }
 
@@ -32,21 +37,42 @@ public class DAOObat implements InterfaceDAO{
             statement.setInt(3, obat.getStok());
             statement.setString(4, obat.getJenis());
             statement.setInt(5, obat.getIdObat());
-            statement.executeUpdate();
+            
+            int result = statement.executeUpdate();
+            
+            
+            if (result > 0) {
+                System.out.println("Obat ID " + obat.getIdObat() + " (" + obat.getNamaObat() + ") berhasil diupdate!");
+            } else {
+                System.out.println("Obat ID " + obat.getIdObat() + " tidak ditemukan!");
+            }
+            
         }catch(Exception exception){
-            System.out.println("Gagal Update Data Obat: " + exception.getMessage());
+            System.out.println("Gagal: " + exception.getMessage());
         }
     }
 
     @Override
     public void delete(int id){
         try{
+            // Cek dulu ada ga datanya
+            ModelObat obat = (ModelObat) getById(id);
+            String namaObat = (obat != null) ? obat.getNamaObat() : "Unknown";
+            
             String query = "DELETE FROM obat WHERE id_obat=?";
             PreparedStatement statement = Connector.Connect().prepareStatement(query);
             statement.setInt(1, id);           
-            statement.executeUpdate();
+            int result = statement.executeUpdate();
+            
+            
+            if (result > 0) {
+                System.out.println("Obat ID " + id + " (" + namaObat + ") berhasil dihapus!");
+            } else {
+                System.out.println("Obat ID " + id + " tidak ditemukan!");
+            }
+            
         }catch(Exception exception){
-            System.out.println("Gagal Menghapus Data Obat: " + exception.getMessage());
+            System.out.println("Gagal: " + exception.getMessage());
         }
     }
 
@@ -61,7 +87,7 @@ public class DAOObat implements InterfaceDAO{
             
             if(result.next()){
                 String jenis = result.getString("jenis");
-                if(jenis.equalsIgnoreCase("Resep")){
+                if(jenis.equalsIgnoreCase("resep")){
                     obat = new ObatResep(
                         result.getInt("id_obat"), result.getString("nama_obat"), 
                         result.getInt("stok"), result.getInt("harga"));
@@ -72,9 +98,9 @@ public class DAOObat implements InterfaceDAO{
                 }
             }
         }catch(Exception exception){
-            System.out.println("Obat Dengan Id Tersebut Gagal Ditemukan: " + exception.getMessage());
+            System.out.println("Gagal: " + exception.getMessage());
         }
-        return obat;  // ✅ SUDAH DIPERBAIKI
+        return obat;
     }
 
     @Override
@@ -88,7 +114,7 @@ public class DAOObat implements InterfaceDAO{
             while(result.next()){
                 String jenis = result.getString("jenis");
                 ModelObat obat;
-                if(jenis.equalsIgnoreCase("Resep")){
+                if(jenis.equalsIgnoreCase("resep")){
                     obat = new ObatResep(
                         result.getInt("id_obat"), result.getString("nama_obat"), 
                         result.getInt("stok"), result.getInt("harga"));
@@ -99,8 +125,12 @@ public class DAOObat implements InterfaceDAO{
                 }
                 listObat.add(obat);
             }
+            
+            
+            System.out.println("Menampilkan " + listObat.size() + " data obat dimuat dari database");
+            
         }catch(Exception exception){
-            System.out.println("Gagal Menampilkan Data Obat: " + exception.getMessage());
+            System.out.println("Gagal: " + exception.getMessage());
         }
         return listObat;
     }
@@ -111,9 +141,17 @@ public class DAOObat implements InterfaceDAO{
             PreparedStatement statement = Connector.Connect().prepareStatement(query);
             statement.setInt(1, stokBaru);
             statement.setInt(2, idObat);
-            statement.executeUpdate();
+            int result = statement.executeUpdate();
+            
+            
+            if (result > 0) {
+                System.out.println("ID " + idObat + " stok menjadi " + stokBaru);
+            } else {
+                System.out.println("ID " + idObat + " tidak ditemukan!");
+            }
+            
         }catch(Exception exception){
-            System.out.println("Gagal Update Stok: " + exception.getMessage());
+            System.out.println("Gagal: " + exception.getMessage());
         }
     }
 }
