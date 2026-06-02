@@ -7,6 +7,7 @@ import Model.Connector;
 import Model.Medify.*;
 import java.sql.*;
 import java.util.*;
+
 /**
  *
  * @author USER
@@ -18,8 +19,8 @@ public class ControllerTransaksi {
         controllerObat = new ControllerObat();
     }
 
-    // Proses Penjualan - Mengembalikan data struk (tanpa print langsung)
-    public StrukData prosesPenjualan(String namaCustomer, int idObat, int jumlah) throws Exception {
+    // Proses Penjualan
+    public void prosesPenjualan(String namaCustomer, int idObat, int jumlah) throws Exception {
         // Validasi input
         if (namaCustomer.trim().isEmpty()) {
             throw new Exception("Nama customer tidak boleh kosong!");
@@ -40,11 +41,10 @@ public class ControllerTransaksi {
         }
         
         // Hitung total (dengan diskon dari polymorphism)
-        int hargaSetelahDiskon = obat.getHargaSetelahDiskon();
-        int totalBayar = hargaSetelahDiskon * jumlah;
+        int totalBayar = obat.getHargaSetelahDiskon() * jumlah;
         
         // Kurangi stok
-        controllerObat.KurangiStok(idObat, jumlah);
+        controllerObat.kurangiStok(idObat, jumlah);
         
         // Simpan transaksi ke database
         String query = "INSERT INTO transaksi (nama_customer, nama_obat, jenis_obat, jumlah_beli, harga_satuan, total_bayar) VALUES (?,?,?,?,?,?)";
@@ -60,58 +60,8 @@ public class ControllerTransaksi {
         } catch (Exception e) {
             throw new Exception("Gagal menyimpan transaksi: " + e.getMessage());
         }
-        
-        // Kembalikan data struk (biar View yang nampilin)
-        return new StrukData(namaCustomer, obat, jumlah, totalBayar);
     }
-    
-    // Inner class untuk membungkus data struk
-    public static class StrukData {
-        public String namaCustomer;
-        public String namaObat;
-        public String jenisObat;
-        public int hargaSatuan;
-        public double diskon;
-        public int hargaSetelahDiskon;
-        public int jumlahBeli;
-        public int totalBayar;
-        
-        public StrukData(String namaCustomer, ModelObat obat, int jumlah, int totalBayar) {
-            this.namaCustomer = namaCustomer;
-            this.namaObat = obat.getNamaObat();
-            this.jenisObat = obat.getJenis().equals("resep") ? "Obat Resep (Diskon 10%)" : "Obat Biasa";
-            this.hargaSatuan = obat.getHarga();
-            this.diskon = obat.getDiskon();
-            this.hargaSetelahDiskon = obat.getHargaSetelahDiskon();
-            this.jumlahBeli = jumlah;
-            this.totalBayar = totalBayar;
-        }
-        
-        // Method untuk membuat teks struk
-        public String toStrukString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append("╔════════════════════════════════════════╗\n");
-            sb.append("║           APOTEK SEHAT                 ║\n");
-            sb.append("╠════════════════════════════════════════╣\n");
-            sb.append(String.format("║ Customer  : %-25s ║\n", namaCustomer));
-            sb.append(String.format("║ Obat      : %-25s ║\n", namaObat));
-            sb.append(String.format("║ Jenis     : %-25s ║\n", jenisObat));
-            sb.append("╠════════════════════════════════════════╣\n");
-            sb.append(String.format("║ Harga     : Rp %,10d      ║\n", hargaSatuan));
-            if (diskon > 0) {
-                sb.append(String.format("║ Diskon    : %d%%                      ║\n", (int)diskon));
-                sb.append(String.format("║ Harga Akhir: Rp %,10d      ║\n", hargaSetelahDiskon));
-            }
-            sb.append(String.format("║ Jumlah    : %d x                    ║\n", jumlahBeli));
-            sb.append("╠════════════════════════════════════════╣\n");
-            sb.append(String.format("║ TOTAL     : Rp %,10d      ║\n", totalBayar));
-            sb.append("╠════════════════════════════════════════╣\n");
-            sb.append("║         TERIMA KASIH!                  ║\n");
-            sb.append("╚════════════════════════════════════════╝\n");
-            return sb.toString();
-        }
-    }
-    
+
     // Get All Transaksi (untuk riwayat admin)
     public List<ModelTransaksi> getAllTransaksi() {
         List<ModelTransaksi> listTransaksi = new ArrayList<>();
