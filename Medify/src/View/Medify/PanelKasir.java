@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PanelCustomer extends JPanel {
+public class PanelKasir extends JPanel {
     
     private ControllerObat controllerObat;
     private ControllerTransaksi controllerTransaksi;
@@ -34,7 +34,7 @@ public class PanelCustomer extends JPanel {
     private List<Object> semuaObat;
     private List<ItemKeranjang> keranjang;
     
-    public PanelCustomer() {
+    public PanelKasir() {
         controllerObat = new ControllerObat();
         controllerTransaksi = new ControllerTransaksi();
         semuaObat = controllerObat.getAll();
