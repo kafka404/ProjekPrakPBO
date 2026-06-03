@@ -57,6 +57,14 @@ public class ControllerTransaksi {
             statement.setInt(5, obat.getHarga());
             statement.setInt(6, totalBayar);
             statement.executeUpdate();
+            new Thread(() -> {
+        try {
+            Thread.sleep(1000);
+            System.out.println("Transaksi " + namaCustomer + " selesai diproses");
+        } catch (InterruptedException ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
+    }).start();
         } catch (Exception e) {
             throw new Exception("Gagal menyimpan transaksi: " + e.getMessage());
         }
