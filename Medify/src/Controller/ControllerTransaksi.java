@@ -30,7 +30,7 @@ public class ControllerTransaksi {
         }
         
         // Ambil data obat
-        ModelObat obat = controllerObat.getById(idObat);
+        ModelObat obat = controllerObat.cariObat(idObat);
         if (obat == null) {
             throw new Exception("Obat tidak ditemukan!");
         }
