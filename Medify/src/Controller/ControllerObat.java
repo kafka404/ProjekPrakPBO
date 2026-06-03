@@ -53,17 +53,7 @@ public class ControllerObat {
         return dao.getAll();
     }
 
-    public ModelObat cariObat(String namaObat) {
-    List<Object> list = dao.getAll();
-    for (Object obj : list) {
-        ModelObat o = (ModelObat) obj;
-        if (o.getNamaObat().equalsIgnoreCase(namaObat)) {
-            return o;
-        }
-    }
-    return null;
-    }
-    
+   // OVERLOADING 
     // Cari Obat Berdasarkan ID
     public ModelObat cariObat(int id) {
         return (ModelObat) dao.getById(id);
