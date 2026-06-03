@@ -52,9 +52,20 @@ public class ControllerObat {
     public List<Object> getAll() {
         return dao.getAll();
     }
+
+    public ModelObat cariObat(String namaObat) {
+    List<Object> list = dao.getAll();
+    for (Object obj : list) {
+        ModelObat o = (ModelObat) obj;
+        if (o.getNamaObat().equalsIgnoreCase(namaObat)) {
+            return o;
+        }
+    }
+    return null;
+    }
     
     // Cari Obat Berdasarkan ID
-    public ModelObat getById(int id) {
+    public ModelObat cariObat(int id) {
         return (ModelObat) dao.getById(id);
     }
     
